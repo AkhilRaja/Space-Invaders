@@ -5,13 +5,113 @@
     <title></title>
 </head>
 <body>
-<canvas id="mycanvas" width="840" height="680" ></canvas>
+<canvas id="mycanvas" width="800" height="600" ></canvas>
 <script>
 
-    var a;
+var g_Canvas = document.getElementById("mycanvas");
+var g_ctxt = g_Canvas.getContext("2d");
+
+var g_width_charac=12;
+var g_height_charac=8;
+
+var g_move_left= false;
+var g_move_right=false;
+
+function Prepare_Background(){
+    g_ctxt.clearRect(0,0,g_Canvas.width,g_Canvas.height);
+    g_ctxt.strokeRect(0,0,g_Canvas.width,g_Canvas.height);
+}
 
 
+function Space_Ship(l_X,l_Y){
+this.X =l_X;
+this.Y =l_Y;
+this.ship_Frame1 = [  0,0,0,0,0,0,1,0,0,0,0,0,0,
+                      0,0,0,0,0,1,1,1,0,0,0,0,0,
+                      0,0,0,0,0,1,1,1,0,0,0,0,0,
+                      0,1,1,1,1,1,1,1,1,1,1,1,0,
+                      1,1,1,1,1,1,1,1,1,1,1,1,1,
+                      1,1,1,1,1,1,1,1,1,1,1,1,1,
+                      1,1,1,1,1,1,1,1,1,1,1,1,1 ];
 
+this.TempX=0;
+this.TempY=0;
+
+
+    this.Draw_SpaceShip = function() {
+    var l_i = 0;
+    var l_j = 0;
+    TempX=0;TempY=0;
+    for (l_i = 0; l_i < (g_width_charac + 1) * g_height_charac; l_i++) {
+
+        TempX += 5;
+        if (l_i % 13 == 0) {
+            TempY += 5;
+            TempX = 0;
+        }
+
+        if(this.ship_Frame1[l_i]==1)
+        {
+            g_ctxt.fillStyle = "rgb(0,100,40)";
+            g_ctxt.fillRect(this.X + TempX, this.Y + TempY, 5, 5);
+        }
+
+    }
+}
+
+    this.Update_X_cord  = function(){
+     if(g_move_left)
+        {
+            this.X-=5;
+        }
+     else if(g_move_right)
+        {
+            this.X+=5;
+        }
+    }
+
+}
+
+var SpaceShip = new Space_Ship(100,500);
+
+function Set_Move_True(l_Key){
+
+   if(l_Key.keyCode==37)
+    {
+     g_move_left=true;
+    }
+  else if(l_Key.keyCode==39)
+   {
+     g_move_right=true;
+   }
+
+}
+
+function Set_Move_False(l_Key){
+
+    if(l_Key.keyCode==37)
+    {
+        g_move_left=false;
+    }
+    else if(l_Key.keyCode==39)
+    {
+        g_move_right=false;
+    }
+
+}
+
+
+function Game_loop(){
+    Prepare_Background();
+    SpaceShip.Update_X_cord();
+    SpaceShip.Draw_SpaceShip();
+}
+
+
+setInterval(Game_loop,33);
+
+window.addEventListener("keydown",Set_Move_True);
+window.addEventListener("keyup",Set_Move_False);
 
 </script>
 </body>
