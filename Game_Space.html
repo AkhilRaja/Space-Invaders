@@ -5,7 +5,7 @@
     <title></title>
 </head>
 <body>
-<canvas id="mycanvas" width="800" height="600" ></canvas>
+<canvas id="mycanvas" width="700" height="600" ></canvas>
 <script>
 
 var g_Canvas = document.getElementById("mycanvas");
@@ -16,10 +16,22 @@ var g_height_charac=8;
 
 var g_move_left= false;
 var g_move_right=false;
+var g_Bullet_Move=false;
 
 function Prepare_Background(){
     g_ctxt.clearRect(0,0,g_Canvas.width,g_Canvas.height);
     g_ctxt.strokeRect(0,0,g_Canvas.width,g_Canvas.height);
+
+    var grd=g_ctxt.createRadialGradient(375,200,0,g_Canvas.width/2,260,300);
+    grd.addColorStop(0,"rgb(96,96,96)");
+    grd.addColorStop(1,"black");
+
+    g_ctxt.fillStyle=grd;
+    g_ctxt.fillRect(0,0,g_Canvas.width,g_Canvas.height);
+
+    g_ctxt.fillStyle="rgb(0,255,0)";
+    g_ctxt.fillRect(0,550,g_Canvas.width,3);
+
 }
 
 
@@ -36,7 +48,8 @@ this.ship_Frame1 = [  0,0,0,0,0,0,1,0,0,0,0,0,0,
 
 this.TempX=0;
 this.TempY=0;
-
+this.BulletX=this.X;
+this.BulletY=this.Y;
 
     this.Draw_SpaceShip = function() {
     var l_i = 0;
@@ -44,21 +57,20 @@ this.TempY=0;
     TempX=0;TempY=0;
     for (l_i = 0; l_i < (g_width_charac + 1) * g_height_charac; l_i++) {
 
-        TempX += 5;
+        TempX += 4;
         if (l_i % 13 == 0) {
-            TempY += 5;
+            TempY += 4;
             TempX = 0;
         }
 
         if(this.ship_Frame1[l_i]==1)
         {
-            g_ctxt.fillStyle = "rgb(0,100,40)";
-            g_ctxt.fillRect(this.X + TempX, this.Y + TempY, 5, 5);
+            g_ctxt.fillStyle = "rgb(0,255,0)";
+            g_ctxt.fillRect(this.X + TempX, this.Y + TempY, 4, 4);
         }
 
+       }
     }
-}
-
     this.Update_X_cord  = function(){
      if(g_move_left)
         {
@@ -70,23 +82,38 @@ this.TempY=0;
         }
     }
 
-}
+    this.Bullet_Update_Draw = function(){
+        if(g_Bullet_Move||(this.Bullety>=this.Y&&this.BulletY<=20))
+        {
+            this.BulletY -= 5;
 
+        }
+        g_ctxt.fillStyle="rgb(0,255,0)";
+        g_ctxt.fillRect(this.BulletX,this.BulletY,2,5);
+        console.log("Moving");
+    }
+}
 var SpaceShip = new Space_Ship(100,500);
+
+
+
+
 
 function Set_Move_True(l_Key){
 
-   if(l_Key.keyCode==37)
+    if(l_Key.keyCode==37)
     {
-     g_move_left=true;
+        g_move_left=true;
     }
-  else if(l_Key.keyCode==39)
-   {
-     g_move_right=true;
-   }
-
+    else if(l_Key.keyCode==39)
+    {
+        g_move_right=true;
+    }
+    else if(l_Key.keyCode==32)
+    {
+        g_Bullet_Move=true;
+    }
 }
-
 function Set_Move_False(l_Key){
 
     if(l_Key.keyCode==37)
@@ -97,7 +124,6 @@ function Set_Move_False(l_Key){
     {
         g_move_right=false;
     }
-
 }
 
 
@@ -105,6 +131,7 @@ function Game_loop(){
     Prepare_Background();
     SpaceShip.Update_X_cord();
     SpaceShip.Draw_SpaceShip();
+    SpaceShip.Bullet_Update_Draw();
 }
 
 
