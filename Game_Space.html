@@ -5,7 +5,7 @@
     <title></title>
 </head>
 <body>
-<canvas id="mycanvas" width="700" height="600" ></canvas>
+<canvas id="mycanvas" width="650" height="600" ></canvas>
 <script>
 
 var g_Canvas = document.getElementById("mycanvas");
@@ -100,11 +100,13 @@ this.BulletY=this.Y;
            g_ctxt.fillRect(this.BulletX,this.BulletY,2,5);
            console.log("moving");
        }
+       else{
+            SpaceShip.Bullet_Update();
+        }
        if(g_counter>=100)
        {
            g_Bullet_Reset=false;
            g_counter=0;
-           SpaceShip.Bullet_Update();
        }
 
 
@@ -114,7 +116,16 @@ this.BulletY=this.Y;
 
 var SpaceShip = new Space_Ship(100,500);
 
+function Enemies_Aliens(X,Y){
+ this.X=X;
+ this.Y=Y;
 
+
+ this.Draw_Enemies()=function(){
+
+    }
+
+}
 
 
 
