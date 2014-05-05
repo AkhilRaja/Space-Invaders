@@ -17,6 +17,9 @@ var g_height_charac=8;
 var g_move_left= false;
 var g_move_right=false;
 var g_Bullet_Move=false;
+var g_Bullet_Reset=false;
+
+var g_counter=0;
 
 function Prepare_Background(){
     g_ctxt.clearRect(0,0,g_Canvas.width,g_Canvas.height);
@@ -82,17 +85,33 @@ this.BulletY=this.Y;
         }
     }
 
-    this.Bullet_Update_Draw = function(){
-        if(g_Bullet_Move||(this.Bullety>=this.Y&&this.BulletY<=20))
-        {
-            this.BulletY -= 5;
-
-        }
-        g_ctxt.fillStyle="rgb(0,255,0)";
-        g_ctxt.fillRect(this.BulletX,this.BulletY,2,5);
-        console.log("Moving");
+    this.Bullet_Update = function(){
+      this.BulletX=this.X+5;
+      this.BulletY=this.Y;
     }
+    this.Bullet_Draw = function(){
+
+        if(g_Bullet_Reset==true)
+       {
+           g_counter++;
+           this.BulletY-=5;
+           g_ctxt.fillStyle= "rgb(0,255,0)";
+
+           g_ctxt.fillRect(this.BulletX,this.BulletY,2,5);
+           console.log("moving");
+       }
+       if(g_counter>=100)
+       {
+           g_Bullet_Reset=false;
+           g_counter=0;
+           SpaceShip.Bullet_Update();
+       }
+
+
+    }
+
 }
+
 var SpaceShip = new Space_Ship(100,500);
 
 
@@ -109,9 +128,10 @@ function Set_Move_True(l_Key){
     {
         g_move_right=true;
     }
-    else if(l_Key.keyCode==32)
+    else if(l_Key.keyCode==32&&g_counter<=100)
     {
         g_Bullet_Move=true;
+        g_Bullet_Reset=true;
     }
 }
 function Set_Move_False(l_Key){
@@ -124,6 +144,10 @@ function Set_Move_False(l_Key){
     {
         g_move_right=false;
     }
+    else if(l_Key.keyCode==32)
+    {
+        g_Bullet_Move=false;
+    }
 }
 
 
@@ -131,7 +155,7 @@ function Game_loop(){
     Prepare_Background();
     SpaceShip.Update_X_cord();
     SpaceShip.Draw_SpaceShip();
-    SpaceShip.Bullet_Update_Draw();
+    SpaceShip.Bullet_Draw();
 }
 
 
