@@ -1,5 +1,8 @@
 # Space-Invaders
 ### Pure JS. Space Invaders
+Try out the game here.
+http://akhilraja.github.io/Space-Invaders/
+
 
 ![Alt text](Screenshots/2.png?raw=true "Optional Title")
 
